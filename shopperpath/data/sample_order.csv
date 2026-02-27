@@ -1,0 +1,30 @@
+item_name,quantity,aisle,category,customer_notes,historical_stock_risk,historical_substitution_rate,brand,dietary_tags,price
+Oatly Oat Milk Original 64oz,2,A5,Dairy Alternatives,"If original is out, unsweetened oat milk is fine. No almond milk.",medium,0.35,Oatly,"vegan; non-dairy",5.49
+Organic Bananas 1lb,3,Produce,Produce,"Ripe but not brown.",low,0.05,,"vegan; gluten-free",0.79
+Chobani Greek Yogurt Strawberry 4-pack,1,A3,Dairy,"Strawberry only. No peach.",high,0.50,Chobani,"vegetarian",4.99
+Dave's Killer Bread 21 Whole Grains,1,A2,Bakery,"Any Dave's brand is fine.",medium,0.20,Dave's,"vegan",5.99
+Cage-Free Large Brown Eggs 12ct,1,A3,Dairy,"No substitutions.",low,0.02,,"vegetarian",3.49
+Organic Baby Spinach 5oz,2,Produce,Produce,"Fresh only, no wilted leaves.",medium,0.25,,"vegan; gluten-free",3.99
+Honeycrisp Apples 3lb Bag,1,Produce,Produce,"Crisp preferred.",low,0.10,,"vegan; gluten-free",5.99
+Kroger Shredded Mozzarella 16oz,1,A4,Dairy,"Low-moisture preferred.",medium,0.30,Kroger,"vegetarian",4.49
+Barilla Spaghetti 1lb,2,A7,Pasta,"Any spaghetti is fine.",low,0.05,Barilla,"vegan",1.79
+Rao's Marinara Sauce 24oz,1,A7,Pasta Sauce,"No substitutions.",medium,0.15,Rao's,"gluten-free",7.99
+Coca-Cola Zero Sugar 12-pack,1,A9,Beverages,"Zero Sugar only.",high,0.40,Coca-Cola,"",6.49
+LaCroix Sparkling Water Lemon 12-pack,1,A9,Beverages,"Any citrus flavor okay.",medium,0.25,LaCroix,"",5.99
+Tostitos Scoops Tortilla Chips,1,A10,Snacks,"Any Tostitos okay.",low,0.10,Tostitos,"gluten-free",4.29
+Sabra Classic Hummus 10oz,1,A10,Dips,"Classic only.",medium,0.20,Sabra,"vegan",3.99
+Organic Strawberries 1lb,2,Produce,Produce,"Bright red, no mushy berries.",high,0.45,,"vegan; gluten-free",4.99
+Avocados Hass 3ct Bag,1,Produce,Produce,"Medium firmness.",low,0.08,,"vegan; gluten-free",3.99
+Kroger Boneless Skinless Chicken Breast 1lb,1,A11,Meat,"Lean cuts preferred.",medium,0.18,Kroger,"",6.99
+Beyond Meat Plant-Based Patties 2ct,1,A11,Meat Alternatives,"Any Beyond product okay.",medium,0.22,Beyond Meat,"vegan",5.99
+Tillamook Sharp Cheddar Block 8oz,1,A4,Dairy,"Sharp only.",medium,0.30,Tillamook,"vegetarian",4.79
+Quaker Old Fashioned Oats 42oz,1,A6,Breakfast,"Any brand okay.",low,0.05,Quaker,"vegan",4.49
+Kroger Almond Butter Creamy 16oz,1,A6,Spreads,"Creamy only.",medium,0.28,Kroger,"vegan",6.99
+Organic Blueberries 6oz,2,Produce,Produce,"Firm berries only.",high,0.50,,"vegan; gluten-free",4.49
+Sargento Colby Jack Slices 10ct,1,A4,Dairy,"No substitutions.",low,0.03,Sargento,"vegetarian",3.99
+Kroger Whole Milk 1 Gallon,1,A3,Dairy,"Whole milk only.",low,0.05,Kroger,"",3.29
+Mission Flour Tortillas 10ct,1,A10,Bakery,"Any size okay.",medium,0.22,Mission,"vegetarian",2.99
+Organic Baby Carrots 1lb,1,Produce,Produce,"Fresh only.",low,0.07,,"vegan; gluten-free",1.99
+Kroger Ground Turkey 1lb,1,A11,Meat,"93% lean preferred.",medium,0.25,Kroger,"",5.49
+Ben & Jerry's Chocolate Fudge Brownie Pint,1,A12,Frozen,"Any chocolate flavor okay.",high,0.45,Ben & Jerry's,"vegetarian",5.49
+Frozen Broccoli Florets 12oz,1,A12,Frozen,"Any brand okay.",low,0.10,,"vegan; gluten-free",1.99
