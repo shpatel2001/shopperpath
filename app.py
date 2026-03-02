@@ -10,7 +10,7 @@ from modules.utils import format_json_output
 
 st.set_page_config(page_title="ShopperPath", layout="wide")
 
-st.title("🛒 ShopperPath – Instacart Shopper Assistant")
+st.title("ShopperPath – Shopper Buying Assistant")
 
 # File upload
 uploaded_file = st.file_uploader("Upload your order CSV", type=["csv"])
@@ -202,4 +202,5 @@ if uploaded_file:
             st.info("Click to generate a final summary for the entire order.")
 
 else:
+
     st.info("Upload a CSV to begin.")
