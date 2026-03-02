@@ -220,8 +220,7 @@ if uploaded_file:
         else:
             st.info("Click 'Interpret Items' to generate item insights.")
 
-    # substitutions tab
-   # substitutions tab
+# substitutions tab
 with tab4:
     st.markdown("<div class='section-header'>🔄 Substitutions</div>", unsafe_allow_html=True)
 
