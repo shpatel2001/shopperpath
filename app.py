@@ -14,34 +14,37 @@ st.set_page_config(page_title="ShopperPath", layout="wide")
 st.markdown("""
 <style>
 
-    body {
+    * {
         font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
     }
 
     .section-header {
-        font-size: 1.4rem;
+        font-size: 1.35rem;
         font-weight: 600;
-        margin-top: 1.8rem;
-        margin-bottom: 0.6rem;
+        margin-top: 1.4rem;
+        margin-bottom: 0.4rem;
+        letter-spacing: -0.3px;
     }
 
     .card {
-        background-color: #FFFFFF;
-        border: 1px solid #E5E7EB;
-        padding: 18px;
-        border-radius: 12px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-        margin-bottom: 1rem;
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        padding: 16px 18px;
+        border-radius: 14px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        margin-bottom: 0.9rem;
+        transition: box-shadow 0.15s ease, transform 0.15s ease;
     }
 
-    .risk-high {
-        border-left: 6px solid #EF4444;
-    }
-    .risk-medium {
-        border-left: 6px solid #F59E0B;
-    }
-    .risk-low {
-        border-left: 6px solid #10B981;
+    .card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transform: translateY(-1px);
     }
 
     .badge {
@@ -52,22 +55,136 @@ st.markdown("""
         font-weight: 600;
         margin-right: 6px;
     }
-    .badge-green { background: #D1FAE5; color: #065F46; }
-    .badge-yellow { background: #FEF3C7; color: #92400E; }
-    .badge-red { background: #FEE2E2; color: #991B1B; }
+
+    .bottom-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: var(--bottom-bg);
+        color: var(--bottom-text);
+        padding: 12px;
+        text-align: center;
+        border-top: 1px solid var(--bottom-border);
+        box-shadow: 0 -2px 6px rgba(0,0,0,0.08);
+        z-index: 999;
+    }
+
+    /* Switch styling */
+    .switch-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .switch-label {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 46px;
+        height: 24px;
+    }
+
+    .switch input { display: none; }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0; left: 0;
+        right: 0; bottom: 0;
+        background-color: #ccc;
+        transition: .3s;
+        border-radius: 24px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .3s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: #4ade80;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(22px);
+    }
 
 </style>
 """, unsafe_allow_html=True)
 
-st.title("ShopperPath – Shopper Buying Assistant")
+# theme switcher in sidebar
+st.sidebar.markdown("<div class='switch-container'><span class='switch-label'>Dark Mode</span>", unsafe_allow_html=True)
+dark_mode = st.sidebar.checkbox("", key="dark_mode_switch")
+st.sidebar.markdown("</div>", unsafe_allow_html=True)
 
-# file uploader   
+theme_choice = st.sidebar.selectbox("Accent Theme", ["Light", "Green"])
+
+if dark_mode:
+    theme = "Dark"
+else:
+    theme = theme_choice
+
+if theme == "Light":
+    st.markdown("""
+    <style>
+        :root {
+            --card-bg: #ffffff;
+            --card-border: #e5e7eb;
+            --bottom-bg: #ffffff;
+            --bottom-text: #111827;
+            --bottom-border: #e5e7eb;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+elif theme == "Dark":
+    st.markdown("""
+    <style>
+        :root {
+            --card-bg: #1f2937;
+            --card-border: #374151;
+            --bottom-bg: #1f2937;
+            --bottom-text: #f3f4f6;
+            --bottom-border: #374151;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+else:  # Green theme
+    st.markdown("""
+    <style>
+        :root {
+            --card-bg: #ffffff;
+            --card-border: #c7e8ca;
+            --bottom-bg: #0b6e4f;
+            --bottom-text: #ffffff;
+            --bottom-border: #0b6e4f;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+
+st.title("ShopperPath – Shopping Buying Assistant")
+
+# file uploader
 uploaded_file = st.file_uploader("Upload your order CSV", type=["csv"])
 
 if uploaded_file:
     df = pd.read_csv(uploaded_file)
 
-    # Clean and validate CSV
     try:
         df = validate_and_clean(df)
     except Exception as e:
@@ -77,19 +194,13 @@ if uploaded_file:
     st.markdown("<div class='section-header'>Order Preview</div>", unsafe_allow_html=True)
     st.dataframe(df)
 
-    # tabs for different functionalities
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
-        "Overview",
-        "Route",
-        "Item Interpreter",
-        "Substitutions",
-        "Stock Risk",
-        "Shopper Report"
+        "Overview", "Route", "Item Interpreter", "Substitutions", "Stock Risk", "Report"
     ])
 
     # overview tab
     with tab1:
-        st.markdown("<div class='section-header'>🛒 Batch Overview</div>", unsafe_allow_html=True)
+        st.markdown("<div class='section-header'>🛒 Overview</div>", unsafe_allow_html=True)
 
         total_items = len(df)
         unique_categories = df["category"].nunique()
@@ -100,14 +211,13 @@ if uploaded_file:
         col2.metric("Categories", unique_categories)
         col3.metric("Brands", unique_brands)
 
-        st.markdown("<br>", unsafe_allow_html=True)
-
+        st.markdown("<div style='height:6px;'></div>", unsafe_allow_html=True)
         st.markdown("<div class='card'><b>Items by Category</b></div>", unsafe_allow_html=True)
         st.dataframe(df.groupby("category")["item_name"].count().reset_index())
 
     # route optimization tab
     with tab2:
-        st.markdown("<div class='section-header'>🧭 Optimized Route</div>", unsafe_allow_html=True)
+        st.markdown("<div class='section-header'>🧭 Route</div>", unsafe_allow_html=True)
 
         if st.button("Generate Route"):
             with st.spinner("Optimizing route..."):
@@ -118,7 +228,7 @@ if uploaded_file:
             route, total_time = st.session_state["route_results"]
 
             st.markdown(
-                f"<div class='card'><b>Estimated Total Shop Time:</b> {total_time} minutes</div>",
+                f"<div class='card'><b>Estimated Time:</b> {total_time} minutes</div>",
                 unsafe_allow_html=True
             )
 
@@ -127,7 +237,9 @@ if uploaded_file:
                 <div class='card'>
                     <b>{section['aisle']}</b><br>
                     {section['num_items']} item(s)<br>
-                    <span class='badge badge-green'>{section['time_estimate']} min</span>
+                    <span class='badge' style="background:#D1FAE5;color:#065F46;">
+                        {section['time_estimate']} min
+                    </span>
                     <br><br>
                     {', '.join(section['items'])}
                 </div>
@@ -160,9 +272,9 @@ if uploaded_file:
         else:
             st.info("Click 'Interpret Items' to generate item insights.")
 
-    # substitution engine tab
+    # substitutions tab
     with tab4:
-        st.markdown("<div class='section-header'>🔄 Substitution Engine</div>", unsafe_allow_html=True)
+        st.markdown("<div class='section-header'>🔄 Substitutions</div>", unsafe_allow_html=True)
 
         if st.button("Generate Substitutions"):
             with st.spinner("Generating substitutions..."):
@@ -182,12 +294,27 @@ if uploaded_file:
         if "subs_results" in st.session_state:
             for item, result in st.session_state["subs_results"]:
                 confidence = result.get("confidence", "Medium")
-                badge_color = "badge-green" if confidence == "High" else "badge-yellow"
+
+                if confidence == "High":
+                    bg = "#D1FAE5"
+                    color = "#065F46"
+                else:
+                    bg = "#FEF3C7"
+                    color = "#92400E"
 
                 st.markdown(f"""
                 <div class='card'>
                     <b>{item}</b><br><br>
-                    <span class='badge {badge_color}'>{confidence} Confidence</span>
+                    <span style="
+                        background:{bg};
+                        color:{color};
+                        padding:4px 10px;
+                        border-radius:8px;
+                        font-size:0.75rem;
+                        font-weight:600;
+                    ">
+                        {confidence} Confidence
+                    </span>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -195,9 +322,9 @@ if uploaded_file:
         else:
             st.info("Click 'Generate Substitutions' to generate alternatives.")
 
-    # stock risk predictor tab
+    # stock risk tab
     with tab5:
-        st.markdown("<div class='section-header'>⚠️ Stock Risk Predictor</div>", unsafe_allow_html=True)
+        st.markdown("<div class='section-header'>⚠️ Stock Risk</div>", unsafe_allow_html=True)
 
         if st.button("Predict Stock Risk"):
             with st.spinner("Predicting stock risk..."):
@@ -215,14 +342,16 @@ if uploaded_file:
         if "risk_results" in st.session_state:
             for item, result in st.session_state["risk_results"]:
                 risk_level = result.get("risk_level", "Medium")
-                risk_class = (
-                    "risk-high" if risk_level == "High" else
-                    "risk-medium" if risk_level == "Medium" else
-                    "risk-low"
-                )
+
+                if risk_level == "High":
+                    style = "border-left: 6px solid #EF4444;"
+                elif risk_level == "Medium":
+                    style = "border-left: 6px solid #F59E0B;"
+                else:
+                    style = "border-left: 6px solid #10B981;"
 
                 st.markdown(f"""
-                <div class='card {risk_class}'>
+                <div class='card' style="{style}">
                     <b>{item}</b><br><br>
                     Risk Level: {risk_level}<br><br>
                 </div>
@@ -232,39 +361,46 @@ if uploaded_file:
         else:
             st.info("Click 'Predict Stock Risk' to generate risk insights.")
 
-    # shopper report tab
+    # report tab
     with tab6:
-        st.markdown("<div class='section-header'>📄 Final Shopper Report</div>", unsafe_allow_html=True)
+        st.markdown("<div class='section-header'>📄 Report</div>", unsafe_allow_html=True)
 
-        if st.button("Generate Shopper Report"):
+        if st.button("Generate Report"):
             with st.spinner("Compiling report..."):
                 sample_items = df['item_name'].tolist()[:10]
 
                 report_prompt = f"""
-                Create a concise, shopper-friendly report summarizing this Instacart order.
+                Create a concise summary of this order.
                 Include:
-                - What type of order this is
+                - Order type
                 - Key categories
-                - Any items that may require extra attention
-                - General shopping strategy
+                - Items needing attention
+                - Suggested shopping strategy
 
                 Items: {sample_items}
                 """
 
                 report = interpret_item(
-                    item_name="Shopper Report",
+                    item_name="Order Report",
                     category="N/A",
                     dietary_tags="N/A",
                     customer_notes=report_prompt
                 )
 
-                st.session_state["shopper_report"] = report
+                st.session_state["report"] = report
 
-        if "shopper_report" in st.session_state:
-            st.markdown("<div class='card'><b>Shopper Report</b></div>", unsafe_allow_html=True)
-            st.write(st.session_state["shopper_report"])
+        if "report" in st.session_state:
+            st.markdown("<div class='card'><b>Order Report</b></div>", unsafe_allow_html=True)
+            st.write(st.session_state["report"])
         else:
-            st.info("Click to generate a final summary for the entire order.")
+            st.info("Click to generate a summary.")
+
+    # flaoting bottom bar for mobile users
+    st.markdown("""
+    <div class='bottom-bar'>
+        ShopperPath is optimized for mobile — scroll up to continue.
+    </div>
+    """, unsafe_allow_html=True)
 
 else:
     st.info("Upload a CSV to begin.")
