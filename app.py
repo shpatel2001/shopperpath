@@ -10,7 +10,9 @@ from modules.utils import format_json_output
 
 st.set_page_config(page_title="ShopperPath", layout="wide")
 
-# UI styling
+# ---------------------------------------------------------
+# GLOBAL UI STYLING (Tighter spacing, improved palette)
+# ---------------------------------------------------------
 st.markdown("""
 <style>
 
@@ -125,9 +127,64 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# ---------------------------------------------------------
+# THEME SWITCH (Light / Dark / Green)
+# ---------------------------------------------------------
+st.sidebar.markdown("<div class='switch-container'><span class='switch-label'>Dark Mode</span>", unsafe_allow_html=True)
+dark_mode = st.sidebar.checkbox("", key="dark_mode_switch")
+st.sidebar.markdown("</div>", unsafe_allow_html=True)
+
+theme_choice = st.sidebar.selectbox("Accent Theme", ["Light", "Green"])
+theme = "Dark" if dark_mode else theme_choice
+
+# Inject theme variables BEFORE UI renders
+if theme == "Light":
+    st.markdown("""
+    <style>
+        :root {
+            --card-bg: #ffffff;
+            --card-border: #e5e7eb;
+            --bottom-bg: #ffffff;
+            --bottom-text: #111827;
+            --bottom-border: #e5e7eb;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+elif theme == "Dark":
+    st.markdown("""
+    <style>
+        :root {
+            --card-bg: #1f2937;
+            --card-border: #374151;
+            --bottom-bg: #1f2937;
+            --bottom-text: #f3f4f6;
+            --bottom-border: #374151;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+else:  # Green theme
+    st.markdown("""
+    <style>
+        :root {
+            --card-bg: #ffffff;
+            --card-border: #c7e8ca;
+            --bottom-bg: #0b6e4f;
+            --bottom-text: #ffffff;
+            --bottom-border: #0b6e4f;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# HEADER
+# ---------------------------------------------------------
 st.title("ShopperPath – Shopping Buying Assistant")
 
-# file uploader
+# ---------------------------------------------------------
+# FILE UPLOAD
+# ---------------------------------------------------------
 uploaded_file = st.file_uploader("Upload your order CSV", type=["csv"])
 
 if uploaded_file:
@@ -146,7 +203,9 @@ if uploaded_file:
         "Overview", "Route", "Item Interpreter", "Substitutions", "Stock Risk", "Report"
     ])
 
-    # overview tab
+    # ---------------------------------------------------------
+    # OVERVIEW
+    # ---------------------------------------------------------
     with tab1:
         st.markdown("<div class='section-header'>🛒 Overview</div>", unsafe_allow_html=True)
 
@@ -163,7 +222,9 @@ if uploaded_file:
         st.markdown("<div class='card'><b>Items by Category</b></div>", unsafe_allow_html=True)
         st.dataframe(df.groupby("category")["item_name"].count().reset_index())
 
-    # route optimization tab
+    # ---------------------------------------------------------
+    # ROUTE
+    # ---------------------------------------------------------
     with tab2:
         st.markdown("<div class='section-header'>🧭 Route</div>", unsafe_allow_html=True)
 
@@ -195,7 +256,9 @@ if uploaded_file:
         else:
             st.info("Click 'Generate Route' to see the optimized picking order.")
 
-    # item interpretation tab
+    # ---------------------------------------------------------
+    # ITEM INTERPRETER
+    # ---------------------------------------------------------
     with tab3:
         st.markdown("<div class='section-header'>🔍 Item Interpretation</div>", unsafe_allow_html=True)
 
@@ -220,68 +283,72 @@ if uploaded_file:
         else:
             st.info("Click 'Interpret Items' to generate item insights.")
 
-# substitutions tab
-with tab4:
-    st.markdown("<div class='section-header'>🔄 Substitutions</div>", unsafe_allow_html=True)
+    # ---------------------------------------------------------
+    # SUBSTITUTIONS (SAFE VERSION)
+    # ---------------------------------------------------------
+    with tab4:
+        st.markdown("<div class='section-header'>🔄 Substitutions</div>", unsafe_allow_html=True)
 
-    if st.button("Generate Substitutions"):
-        with st.spinner("Generating substitutions..."):
-            subs = []
-            for _, row in df.iterrows():
-                result = generate_substitution(
-                    item_name=row["item_name"],
-                    category=row["category"],
-                    brand=row["brand"],
-                    dietary_tags=row["dietary_tags"],
-                    customer_notes=row["customer_notes"]
-                )
-                subs.append((row["item_name"], result))
+        if st.button("Generate Substitutions"):
+            with st.spinner("Generating substitutions..."):
+                subs = []
+                for _, row in df.iterrows():
+                    result = generate_substitution(
+                        item_name=row["item_name"],
+                        category=row["category"],
+                        brand=row["brand"],
+                        dietary_tags=row["dietary_tags"],
+                        customer_notes=row["customer_notes"]
+                    )
+                    subs.append((row["item_name"], result))
 
-            st.session_state["subs_results"] = subs
+                st.session_state["subs_results"] = subs
 
-    if "subs_results" in st.session_state:
-        for item, result in st.session_state["subs_results"]:
+        if "subs_results" in st.session_state:
+            for item, result in st.session_state["subs_results"]:
 
-            # --- SAFE HANDLING: result may be dict OR string ---
-            if isinstance(result, dict):
-                confidence = result.get("confidence", "Medium")
-            else:
-                confidence = "Medium"
+                # SAFE HANDLING: result may be dict OR string
+                if isinstance(result, dict):
+                    confidence = result.get("confidence", "Medium")
+                else:
+                    confidence = "Medium"
 
-            # Badge colors
-            if confidence == "High":
-                bg = "#D1FAE5"
-                color = "#065F46"
-            else:
-                bg = "#FEF3C7"
-                color = "#92400E"
+                # Badge colors
+                if confidence == "High":
+                    bg = "#D1FAE5"
+                    color = "#065F46"
+                else:
+                    bg = "#FEF3C7"
+                    color = "#92400E"
 
-            # Render card
-            st.markdown(f"""
-            <div class='card'>
-                <b>{item}</b><br><br>
-                <span style="
-                    background:{bg};
-                    color:{color};
-                    padding:4px 10px;
-                    border-radius:8px;
-                    font-size:0.75rem;
-                    font-weight:600;
-                ">
-                    {confidence} Confidence
-                </span>
-            </div>
-            """, unsafe_allow_html=True)
+                st.markdown(f"""
+                <div class='card'>
+                    <b>{item}</b><br><br>
+                    <span style="
+                        background:{bg};
+                        color:{color};
+                        padding:4px 10px;
+                        border-radius:8px;
+                        font-size:0.75rem;
+                        font-weight:600;
+                    ">
+                        {confidence} Confidence
+                    </span>
+                </div>
+                """, unsafe_allow_html=True)
 
-            # Render JSON or fallback text
-            if isinstance(result, dict):
-                st.code(format_json_output(result), language="json")
-            else:
-                st.markdown(f"<i>{result}</i>", unsafe_allow_html=True)
+                # JSON or fallback text
+                if isinstance(result, dict):
+                    st.code(format_json_output(result), language="json")
+                else:
+                    st.markdown(f"<i>{result}</i>", unsafe_allow_html=True)
 
-    else:
-        st.info("Click 'Generate Substitutions' to generate alternatives.")
-    # stock risk tab
+        else:
+            st.info("Click 'Generate Substitutions' to generate alternatives.")
+
+    # ---------------------------------------------------------
+    # STOCK RISK
+    # ---------------------------------------------------------
     with tab5:
         st.markdown("<div class='section-header'>⚠️ Stock Risk</div>", unsafe_allow_html=True)
 
@@ -320,7 +387,9 @@ with tab4:
         else:
             st.info("Click 'Predict Stock Risk' to generate risk insights.")
 
-    # report tab
+    # ---------------------------------------------------------
+    # REPORT
+    # ---------------------------------------------------------
     with tab6:
         st.markdown("<div class='section-header'>📄 Report</div>", unsafe_allow_html=True)
 
@@ -354,7 +423,9 @@ with tab4:
         else:
             st.info("Click to generate a summary.")
 
-    # flaoting bottom bar for mobile users
+    # ---------------------------------------------------------
+    # FLOATING BOTTOM BAR
+    # ---------------------------------------------------------
     st.markdown("""
     <div class='bottom-bar'>
         ShopperPath is optimized for mobile — scroll up to continue.
