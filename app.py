@@ -98,9 +98,6 @@ st.markdown(
         margin: 0;
         font-size: 1rem;
     }
-    .block-container {
-        padding-top: 1.2rem;
-    }
     </style>
     """,
     unsafe_allow_html=True,
