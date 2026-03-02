@@ -221,55 +221,67 @@ if uploaded_file:
             st.info("Click 'Interpret Items' to generate item insights.")
 
     # substitutions tab
-    with tab4:
-        st.markdown("<div class='section-header'>🔄 Substitutions</div>", unsafe_allow_html=True)
+   # substitutions tab
+with tab4:
+    st.markdown("<div class='section-header'>🔄 Substitutions</div>", unsafe_allow_html=True)
 
-        if st.button("Generate Substitutions"):
-            with st.spinner("Generating substitutions..."):
-                subs = []
-                for _, row in df.iterrows():
-                    result = generate_substitution(
-                        item_name=row["item_name"],
-                        category=row["category"],
-                        brand=row["brand"],
-                        dietary_tags=row["dietary_tags"],
-                        customer_notes=row["customer_notes"]
-                    )
-                    subs.append((row["item_name"], result))
+    if st.button("Generate Substitutions"):
+        with st.spinner("Generating substitutions..."):
+            subs = []
+            for _, row in df.iterrows():
+                result = generate_substitution(
+                    item_name=row["item_name"],
+                    category=row["category"],
+                    brand=row["brand"],
+                    dietary_tags=row["dietary_tags"],
+                    customer_notes=row["customer_notes"]
+                )
+                subs.append((row["item_name"], result))
 
-                st.session_state["subs_results"] = subs
+            st.session_state["subs_results"] = subs
 
-        if "subs_results" in st.session_state:
-            for item, result in st.session_state["subs_results"]:
+    if "subs_results" in st.session_state:
+        for item, result in st.session_state["subs_results"]:
+
+            # --- SAFE HANDLING: result may be dict OR string ---
+            if isinstance(result, dict):
                 confidence = result.get("confidence", "Medium")
+            else:
+                confidence = "Medium"
 
-                if confidence == "High":
-                    bg = "#D1FAE5"
-                    color = "#065F46"
-                else:
-                    bg = "#FEF3C7"
-                    color = "#92400E"
+            # Badge colors
+            if confidence == "High":
+                bg = "#D1FAE5"
+                color = "#065F46"
+            else:
+                bg = "#FEF3C7"
+                color = "#92400E"
 
-                st.markdown(f"""
-                <div class='card'>
-                    <b>{item}</b><br><br>
-                    <span style="
-                        background:{bg};
-                        color:{color};
-                        padding:4px 10px;
-                        border-radius:8px;
-                        font-size:0.75rem;
-                        font-weight:600;
-                    ">
-                        {confidence} Confidence
-                    </span>
-                </div>
-                """, unsafe_allow_html=True)
+            # Render card
+            st.markdown(f"""
+            <div class='card'>
+                <b>{item}</b><br><br>
+                <span style="
+                    background:{bg};
+                    color:{color};
+                    padding:4px 10px;
+                    border-radius:8px;
+                    font-size:0.75rem;
+                    font-weight:600;
+                ">
+                    {confidence} Confidence
+                </span>
+            </div>
+            """, unsafe_allow_html=True)
 
+            # Render JSON or fallback text
+            if isinstance(result, dict):
                 st.code(format_json_output(result), language="json")
-        else:
-            st.info("Click 'Generate Substitutions' to generate alternatives.")
+            else:
+                st.markdown(f"<i>{result}</i>", unsafe_allow_html=True)
 
+    else:
+        st.info("Click 'Generate Substitutions' to generate alternatives.")
     # stock risk tab
     with tab5:
         st.markdown("<div class='section-header'>⚠️ Stock Risk</div>", unsafe_allow_html=True)
