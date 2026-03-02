@@ -125,58 +125,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# theme switcher in sidebar
-st.sidebar.markdown("<div class='switch-container'><span class='switch-label'>Dark Mode</span>", unsafe_allow_html=True)
-dark_mode = st.sidebar.checkbox("", key="dark_mode_switch")
-st.sidebar.markdown("</div>", unsafe_allow_html=True)
-
-theme_choice = st.sidebar.selectbox("Accent Theme", ["Light", "Green"])
-
-if dark_mode:
-    theme = "Dark"
-else:
-    theme = theme_choice
-
-if theme == "Light":
-    st.markdown("""
-    <style>
-        :root {
-            --card-bg: #ffffff;
-            --card-border: #e5e7eb;
-            --bottom-bg: #ffffff;
-            --bottom-text: #111827;
-            --bottom-border: #e5e7eb;
-        }
-    </style>
-    """, unsafe_allow_html=True)
-
-elif theme == "Dark":
-    st.markdown("""
-    <style>
-        :root {
-            --card-bg: #1f2937;
-            --card-border: #374151;
-            --bottom-bg: #1f2937;
-            --bottom-text: #f3f4f6;
-            --bottom-border: #374151;
-        }
-    </style>
-    """, unsafe_allow_html=True)
-
-else:  # Green theme
-    st.markdown("""
-    <style>
-        :root {
-            --card-bg: #ffffff;
-            --card-border: #c7e8ca;
-            --bottom-bg: #0b6e4f;
-            --bottom-text: #ffffff;
-            --bottom-border: #0b6e4f;
-        }
-    </style>
-    """, unsafe_allow_html=True)
-
-
 st.title("ShopperPath – Shopping Buying Assistant")
 
 # file uploader
