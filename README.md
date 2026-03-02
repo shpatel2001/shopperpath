@@ -1,6 +1,5 @@
 <h1 align="center">ShopperPath</h1>
 <p align="center"><b>AI‑Powered Assistant for In person Shoppers</b></p>
----
 
 ShopperPath is an AI‑powered tool that helps Instacart shoppers work faster, smarter, and with more confidence.  
 Upload your shopping list and ShopperPath instantly analyzes items, predicts stock risk, suggests substitutions, and generates an optimized route through the store.
@@ -57,4 +56,5 @@ This aligns with Instacart’s mission: empowering shoppers with tools that impr
 <img width="1797" height="831" alt="snap4" src="https://github.com/user-attachments/assets/bc480d24-8ced-4bdd-8f86-5609ba71a200" />
 <img width="1747" height="841" alt="snap5" src="https://github.com/user-attachments/assets/351a25b0-1922-4040-b193-2a07711884ab" />
 <img width="1770" height="862" alt="snpa6" src="https://github.com/user-attachments/assets/acab3b64-c5c0-4886-82cb-87ef85d528b5" />
+
 
