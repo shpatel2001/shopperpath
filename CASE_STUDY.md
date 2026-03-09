@@ -38,7 +38,7 @@ The primary user is an Instacart shopper who wants to complete batches faster an
 
 ---
 
-## 🛠 Approach & Implementation
+## Approach & Implementation
 The product was scoped around a simple, repeatable workflow: **Upload → Analyze → Shop.**
 
 * **LLM Engine:** Groq’s Llama-3.1 was selected for its speed and cost-efficiency.
