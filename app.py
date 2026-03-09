@@ -8,9 +8,7 @@ from modules.ai_stock_risk import predict_stock_risk
 from modules.parser import validate_and_clean
 from modules.utils import format_json_output
 
-# -------------------------------------------------
-# PAGE CONFIG + GLOBAL STYLES
-# -------------------------------------------------
+# page config
 st.set_page_config(page_title="ShopperPath", layout="wide")
 
 st.markdown(
@@ -103,9 +101,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# -------------------------------------------------
-# SMALL HELPERS
-# -------------------------------------------------
 def card_header(title: str, icon: str = ""):
     return f"<div class='card-header'>{icon} {title}</div>"
 
@@ -130,27 +125,21 @@ def aisle_card(section):
     """
 
 
-# -------------------------------------------------
-# TITLE
-# -------------------------------------------------
+# title
 st.markdown("<div class='app-title'>🛒 ShopperPath</div>", unsafe_allow_html=True)
 st.markdown(
     "<div class='app-subtitle'>Shopper buying assistant for faster, smarter Instacart runs.</div>",
     unsafe_allow_html=True,
 )
 
-# -------------------------------------------------
-# FILE UPLOAD
-# -------------------------------------------------
+# gile upload
 uploaded_file = st.file_uploader("Upload your order CSV", type=["csv"])
 
 if not uploaded_file:
     st.info("Upload a CSV to begin.")
     st.stop()
 
-# -------------------------------------------------
-# LOAD + CLEAN CSV
-# -------------------------------------------------
+# loading and cleaning csv file
 df = pd.read_csv(uploaded_file)
 
 try:
@@ -159,16 +148,12 @@ except Exception as e:
     st.error(f"CSV Error: {e}")
     st.stop()
 
-# -------------------------------------------------
-# ORDER PREVIEW
-# -------------------------------------------------
+# order preview
 st.markdown("<div class='section-label'>Order</div>", unsafe_allow_html=True)
 st.markdown("<div class='card'>📄 Order preview</div>", unsafe_allow_html=True)
 st.dataframe(df, use_container_width=True, hide_index=True)
 
-# -------------------------------------------------
-# TABS
-# -------------------------------------------------
+# tabs for different choices
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
     [
         "Overview",
@@ -180,9 +165,7 @@ tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
     ]
 )
 
-# -------------------------------------------------
-# 1. OVERVIEW
-# -------------------------------------------------
+# overview
 with tab1:
     st.markdown("<div class='section-label'>Snapshot</div>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns(3)
@@ -217,9 +200,7 @@ with tab1:
         hide_index=True,
     )
 
-# -------------------------------------------------
-# 2. ROUTE OPTIMIZER
-# -------------------------------------------------
+# route optimizer
 with tab2:
     st.markdown("<div class='section-label'>Route</div>", unsafe_allow_html=True)
     st.markdown("<div class='card-header'>🧭 Optimized store route</div>", unsafe_allow_html=True)
@@ -248,9 +229,7 @@ with tab2:
     else:
         st.info("Click **Generate Route** to see the optimized picking order.")
 
-# -------------------------------------------------
-# 3. ITEM INTERPRETER
-# -------------------------------------------------
+# item interpreter
 with tab3:
     st.markdown("<div class='section-label'>AI</div>", unsafe_allow_html=True)
     st.markdown(card_header("🔍 Item interpreter"), unsafe_allow_html=True)
@@ -277,9 +256,7 @@ with tab3:
     else:
         st.info("Click **Interpret Items** to generate item insights.")
 
-# -------------------------------------------------
-# 4. SUBSTITUTION ENGINE
-# -------------------------------------------------
+# substitution engine
 with tab4:
     st.markdown("<div class='section-label'>AI</div>", unsafe_allow_html=True)
     st.markdown(card_header("🔄 Substitution engine"), unsafe_allow_html=True)
@@ -307,9 +284,7 @@ with tab4:
     else:
         st.info("Click **Generate Substitutions** to generate alternatives.")
 
-# -------------------------------------------------
-# 5. STOCK RISK PREDICTOR
-# -------------------------------------------------
+# stock risk predictor
 with tab5:
     st.markdown("<div class='section-label'>AI</div>", unsafe_allow_html=True)
     st.markdown(card_header("📉 Stock risk predictor"), unsafe_allow_html=True)
@@ -335,9 +310,7 @@ with tab5:
     else:
         st.info("Click **Predict Stock Risk** to generate risk insights.")
 
-# -------------------------------------------------
-# 6. SHOPPER REPORT
-# -------------------------------------------------
+# shopper report
 with tab6:
     st.markdown("<div class='section-label'>Summary</div>", unsafe_allow_html=True)
     st.markdown(card_header("📝 Final shopper report"), unsafe_allow_html=True)
@@ -372,4 +345,5 @@ with tab6:
         st.write(st.session_state["shopper_report"])
         st.markdown("</div>", unsafe_allow_html=True)
     else:
+
         st.info("Click to generate a final summary for the entire order.")
